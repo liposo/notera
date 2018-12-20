@@ -1,5 +1,6 @@
 package com.facileapps.notera;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class Note {
     private int id;
     private String title;
     private String noteText;
-    private List<String> noteComments;
+    private List<String> noteComments = new ArrayList<>();
     private Date creationDate;
     private Date updateDate;
 
@@ -27,8 +28,8 @@ public class Note {
         this.id = id;
     }
 
-    public void setNoteComments(List<String> noteComments) {
-        this.noteComments = noteComments;
+    public void addNoteComment(String noteComment) {
+        this.noteComments.add(noteComment);
     }
 
     public void setUpdateDate(Date updateDate) {
