@@ -14,7 +14,7 @@ public class Note {
     private int id;
     private String title;
     private String noteText;
-    private List<String> noteComments = new ArrayList<>();
+    private String noteComment;
     private Date creationDate;
     private Date updateDate;
 
@@ -29,8 +29,8 @@ public class Note {
     }
 
     public void addNoteComment(String noteComment) {
-        this.noteComments.add(noteComment);
-    }
+        this.noteComment = noteComment;
+}
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
@@ -48,8 +48,8 @@ public class Note {
         return noteText;
     }
 
-    public List<String> getNoteComments() {
-        return noteComments;
+    public String getNoteComment() {
+        return noteComment;
     }
 
     public Date getCreationDate() {
