@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".NewNoteActivity">
+
+    <EditText
+        android:id="@+id/edit_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/title_hint"
+        android:hint="@string/title_hint"
+        android:inputType="text"
+        tools:targetApi="o" />
+
+    <EditText
+        android:id="@+id/edit_text_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_title"
+        android:autofillHints="@string/note_desciption_hint"
+        android:hint="@string/note_desciption_hint"
+        tools:targetApi="o" />
+
+</RelativeLayout>
