@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class NewNoteActivity extends AppCompatActivity {
@@ -16,6 +18,8 @@ public class NewNoteActivity extends AppCompatActivity {
             "com.facileapps.notera.EXTRA_TITLE";
     public static final String EXTRA_NOTE =
             "com.facileapps.notera.EXTRA_NOTE";
+    public static final String EXTRA_ID =
+            "com.facileapps.notera.EXTRA_ID";
 
     private EditText editTextTitle;
     private EditText editTextNote;
@@ -28,8 +32,16 @@ public class NewNoteActivity extends AppCompatActivity {
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextNote = findViewById(R.id.edit_text_note);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Note");
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_close);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Note");
+            editTextTitle.setText(intent.getStringExtra(NewNoteActivity.EXTRA_TITLE));
+            editTextNote.setText(intent.getStringExtra(NewNoteActivity.EXTRA_NOTE));
+        } else {
+            setTitle("Add Note");
+        }
     }
 
     private void saveNote() {
@@ -46,6 +58,10 @@ public class NewNoteActivity extends AppCompatActivity {
         data.putExtra(EXTRA_TITLE, title);
         data.putExtra(EXTRA_NOTE, note);
 
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if(id != -1) {
+            data.putExtra(EXTRA_ID, id);
+        }
         setResult(RESULT_OK, data);
         finish();
     }
