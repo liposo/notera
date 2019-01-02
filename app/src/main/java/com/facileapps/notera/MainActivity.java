@@ -3,8 +3,9 @@ package com.facileapps.notera;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -63,18 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-            Drawable background;
             Drawable deleteIcon;
             int deleteIconMargin;
             boolean initiated;
+            Paint paint;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
                 deleteIcon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_delete);
                 if (deleteIcon != null) {
                     deleteIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 }
                 deleteIconMargin = (int) MainActivity.this.getResources().getDimension(R.dimen.ic_delete_margin);
+                paint = new Paint();
+                paint.setColor(Color.RED);
                 initiated = true;
             }
 
@@ -96,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
                     init();
                 }
 
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
+                RectF rectangle = new RectF(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                c.drawRoundRect(rectangle, 8, 8, paint);
 
                 int itemHeight = itemView.getBottom() - itemView.getTop();
                 int intrinsicWidth = deleteIcon.getIntrinsicWidth();
