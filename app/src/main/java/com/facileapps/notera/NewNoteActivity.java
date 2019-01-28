@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class NewNoteActivity extends AppCompatActivity {
             editTextNote.setText(intent.getStringExtra(NewNoteActivity.EXTRA_NOTE));
         } else {
             setTitle("Add Note");
+            editTextNote.requestFocus();
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
 
@@ -48,8 +51,8 @@ public class NewNoteActivity extends AppCompatActivity {
         String title = editTextTitle.getText().toString();
         String note = editTextNote.getText().toString();
 
-        if (title.trim().isEmpty() || note.trim().isEmpty()) {
-            Toast.makeText(this, "Please insert Title and note text", Toast.LENGTH_SHORT)
+        if (note.trim().isEmpty()) {
+            Toast.makeText(this, "Note is empty", Toast.LENGTH_SHORT)
                     .show();
             return;
         }

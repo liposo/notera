@@ -43,4 +43,7 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    //Lottie
+    implementation 'com.airbnb.android:lottie:2.8.0'
 }

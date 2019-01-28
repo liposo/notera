@@ -11,13 +11,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -30,12 +33,23 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_NOTE_REQUEST = 1;
     public static final int EDIT_NOTE_REQUEST = 2;
+
     private NoteViewModel noteViewModel;
+    private LottieAnimationView animationView;
+    private View emptyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        emptyList = findViewById(R.id.empty_list_layout);
+        animationView = (LottieAnimationView) emptyList.findViewById(R.id.empty_animation);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar);
+        getSupportActionBar().setElevation(0f);
 
         FloatingActionButton addNoteButton = findViewById(R.id.button_add_note);
         addNoteButton.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +73,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Note> notes) {
                 noteAdapter.submitList(notes);
+                if(notes.size() == 0) {
+                    displayEmptyListAnimation();
+                } else {
+                    emptyList.setVisibility(View.GONE);
+                }
             }
         });
+
+        if(noteViewModel.getNotes().getValue() == null) {
+            displayEmptyListAnimation();
+        }
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -164,5 +187,29 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Note not saved", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(noteViewModel.getNotes().getValue() == null) {
+            animationView.clearAnimation();
+            animationView.playAnimation();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        if(noteViewModel.getNotes().getValue() == null) {
+            animationView.clearAnimation();
+            animationView.playAnimation();
+        }
+        super.onResume();
+    }
+
+    private void displayEmptyListAnimation() {
+        emptyList.setVisibility(View.VISIBLE);
+        animationView.setAnimation(R.raw.empty);
+        animationView.playAnimation();
     }
 }

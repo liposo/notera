@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Notera</string>
     <string name="title_hint">Title</string>
-    <string name="note_desciption_hint">Note desciption</string>
+    <string name="note_desciption_hint">Note description</string>
     <string name="save_menu">Save</string>
+    <string name="empty_list_text">It appears that your list is empty. Try adding some notes by clicking in the button bellow</string>
 </resources>
