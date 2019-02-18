@@ -11,7 +11,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = Note.class, version = 1)
+@Database(entities = Note.class, version = 1,  exportSchema = false)
 public abstract class NoteDatabase extends RoomDatabase {
 
     private static NoteDatabase instance;
@@ -48,8 +48,8 @@ public abstract class NoteDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            noteDao.insert(new Note("First Note",
-                    "This is the first note, fell free to delete, edit it and create your own notes",
+            noteDao.insert(new Note("Welcome to Notera!",
+                    "Swipe left swipe this to delete it, tap on the button bellow to add new notes.",
                     new Date()));
             return null;
         }

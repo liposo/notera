@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int EDIT_NOTE_REQUEST = 2;
 
     private NoteViewModel noteViewModel;
-    private LottieAnimationView animationView;
     private View emptyList;
 
     @Override
@@ -44,12 +42,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         emptyList = findViewById(R.id.empty_list_layout);
-        animationView = (LottieAnimationView) emptyList.findViewById(R.id.empty_animation);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
-        getSupportActionBar().setElevation(0f);
+        getSupportActionBar().setElevation(0);
 
         FloatingActionButton addNoteButton = findViewById(R.id.button_add_note);
         addNoteButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -72,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
         noteViewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
+                Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
                 noteAdapter.submitList(notes);
                 if(notes.size() == 0) {
-                    displayEmptyListAnimation();
+                    emptyList.setVisibility(View.VISIBLE);
                 } else {
                     emptyList.setVisibility(View.GONE);
                 }
@@ -82,8 +80,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if(noteViewModel.getNotes().getValue() == null) {
-            displayEmptyListAnimation();
+            emptyList.setVisibility(View.VISIBLE);
         }
+
+        Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -187,29 +187,5 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Note not saved", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(noteViewModel.getNotes().getValue() == null) {
-            animationView.clearAnimation();
-            animationView.playAnimation();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        if(noteViewModel.getNotes().getValue() == null) {
-            animationView.clearAnimation();
-            animationView.playAnimation();
-        }
-        super.onResume();
-    }
-
-    private void displayEmptyListAnimation() {
-        emptyList.setVisibility(View.VISIBLE);
-        animationView.setAnimation(R.raw.empty);
-        animationView.playAnimation();
     }
 }
