@@ -11,14 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -28,11 +21,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_NOTE_REQUEST = 1;
     public static final int EDIT_NOTE_REQUEST = 2;
 
+    private RecyclerView recyclerView;
     private NoteViewModel noteViewModel;
     private View emptyList;
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -69,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
         noteViewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
-                Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
                 noteAdapter.submitList(notes);
                 if(notes.size() == 0) {
                     emptyList.setVisibility(View.VISIBLE);
                 } else {
                     emptyList.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         if(noteViewModel.getNotes().getValue() == null) {
             emptyList.setVisibility(View.VISIBLE);
         }
-
-        Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -104,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -114,14 +114,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY,
+                                    int actionState,
+                                    boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
                 if (!initiated) {
                     init();
                 }
 
-                RectF rectangle = new RectF(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                RectF rectangle = new RectF(itemView.getRight() + (int) dX,
+                        itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 c.drawRoundRect(rectangle, 8, 8, paint);
 
                 int itemHeight = itemView.getBottom() - itemView.getTop();
@@ -162,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == ADD_NOTE_REQUEST && resultCode == RESULT_OK) {
@@ -171,6 +176,8 @@ public class MainActivity extends AppCompatActivity {
 
             Note newNote = new Note(title, note, new Date());
             noteViewModel.insert(newNote);
+
+            recyclerView.smoothScrollToPosition(0);
         } else if(requestCode == EDIT_NOTE_REQUEST && resultCode == RESULT_OK) {
             int id  =  data.getIntExtra(NewNoteActivity.EXTRA_ID, -1);
             String title = data.getStringExtra(NewNoteActivity.EXTRA_TITLE);

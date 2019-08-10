@@ -5,29 +5,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+
 public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteHolder> {
 
     private onItemClickListener onItemClickListener;
 
-    public NoteAdapter() {
+    NoteAdapter() {
         super(DIFF_CALLBACK);
     }
 
     private static final DiffUtil.ItemCallback<Note> DIFF_CALLBACK = new DiffUtil.ItemCallback<Note>() {
         @Override
-        public boolean areItemsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
+        public boolean areItemsTheSame(Note oldItem, Note newItem) {
             return oldItem.getId() == newItem.getId();
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Note oldItem, @NonNull Note newItem) {
+        public boolean areContentsTheSame(Note oldItem, Note newItem) {
             return oldItem.getTitle().equals(newItem.getTitle()) &&
                     oldItem.getNoteText().equals(newItem.getNoteText());
         }
@@ -49,7 +49,7 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteHolder> {
         holder.noteTextView.setText(currentNote.getNoteText());
     }
 
-    public Note getNoteAt(int position) {
+    Note getNoteAt(int position) {
         return getItem(position);
     }
 
@@ -58,7 +58,7 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteHolder> {
         private TextView noteTextView;
         private TextView createdAtTextView;
 
-        public NoteHolder(@NonNull View itemView) {
+        NoteHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.text_view_title);
             noteTextView = itemView.findViewById(R.id.text_view_note);
@@ -80,7 +80,7 @@ public class NoteAdapter extends ListAdapter<Note, NoteAdapter.NoteHolder> {
         void onItemClick(Note note);
     }
 
-    public void setOnItemClickListener(onItemClickListener onItemClickListener) {
+    void setOnItemClickListener(onItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 }

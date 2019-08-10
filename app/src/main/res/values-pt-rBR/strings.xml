@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notera</string>
+    <string name="empty_list_text">Adicione notas tocando no botão abaixo</string>
+    <string name="note_desciption_hint">Anotação</string>
+    <string name="save_menu">Salvar</string>
+    <string name="title_hint">"Título"</string>
+</resources>
